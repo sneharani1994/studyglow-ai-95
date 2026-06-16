@@ -28,18 +28,18 @@ export const Route = createFileRoute("/")({
 });
 
 const features = [
-  { icon: MessageSquare, title: "AI Chat", desc: "Ask anything about your notes — get instant, cited answers." },
-  { icon: Mic, title: "Voice Assistant", desc: "Hands-free learning. Speak, listen, understand." },
-  { icon: FileSearch, title: "Notes Summarization", desc: "Turn 50-page PDFs into 5-minute reads." },
-  { icon: BrainCircuit, title: "Quiz Generator", desc: "Custom MCQs from your own material in seconds." },
-  { icon: Layers, title: "Flashcards", desc: "AI-built spaced repetition decks that stick." },
-  { icon: Sparkles, title: "Exam Predictor", desc: "Likely questions ranked by historical probability." },
-  { icon: CalendarRange, title: "Study Planner", desc: "Personalized weekly plans that adapt to you." },
-  { icon: GraduationCap, title: "Tutor Mode", desc: "Beginner to interview — explained at your level." },
-  { icon: Network, title: "Concept Maps", desc: "See how every idea connects, visually." },
-  { icon: Target, title: "Weak Topic Detection", desc: "Find the gaps before exams do." },
-  { icon: Languages, title: "Multi-language", desc: "Learn in English, Hindi, Gujarati and more." },
-  { icon: Activity, title: "Mood & Productivity", desc: "AI adapts to how you feel today." },
+  { icon: MessageSquare, title: "AI Chat", desc: "Ask anything about your notes — get instant, cited answers.", to: "/app/chat" },
+  { icon: Mic, title: "Voice Assistant", desc: "Hands-free learning. Speak, listen, understand.", to: "/app/voice" },
+  { icon: FileSearch, title: "Notes Summarization", desc: "Turn 50-page PDFs into 5-minute reads.", to: "/app/summaries" },
+  { icon: BrainCircuit, title: "Quiz Generator", desc: "Custom MCQs from your own material in seconds.", to: "/app/quizzes" },
+  { icon: Layers, title: "Flashcards", desc: "AI-built spaced repetition decks that stick.", to: "/app/flashcards" },
+  { icon: Sparkles, title: "Exam Predictor", desc: "Likely questions ranked by historical probability.", to: "/app/predictor" },
+  { icon: CalendarRange, title: "Study Planner", desc: "Personalized weekly plans that adapt to you.", to: "/app/planner" },
+  { icon: GraduationCap, title: "Tutor Mode", desc: "Beginner to interview — explained at your level.", to: "/app/tutor" },
+  { icon: Network, title: "Concept Maps", desc: "See how every idea connects, visually.", to: "/app/concept-maps" },
+  { icon: Target, title: "Weak Topic Detection", desc: "Find the gaps before exams do.", to: "/app/weak-topics" },
+  { icon: Languages, title: "Multi-language", desc: "Learn in English, Hindi, Gujarati and more.", to: "/app/languages" },
+  { icon: Activity, title: "Mood & Productivity", desc: "AI adapts to how you feel today.", to: "/app/mood" },
 ];
 
 const steps = [
@@ -130,7 +130,7 @@ function Hero() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button size="lg" asChild className="gradient-primary-bg text-white border-0 hover:opacity-90 shadow-glow">
-              <Link to="/signup">Get Started Free <ArrowRight className="h-4 w-4 ml-1" /></Link>
+              <Link to="/signup">Get Started <ArrowRight className="h-4 w-4 ml-1" /></Link>
             </Button>
             <Button size="lg" variant="outline">Watch Demo</Button>
           </div>
@@ -211,13 +211,15 @@ function Features() {
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.04 }}
             >
-              <Card className="p-6 h-full glass hover:shadow-glow transition-all hover:-translate-y-1">
-                <div className="h-11 w-11 rounded-xl gradient-primary-bg grid place-items-center text-white mb-4">
-                  <f.icon className="h-5 w-5" />
-                </div>
-                <h3 className="font-semibold text-lg">{f.title}</h3>
-                <p className="text-sm text-muted-foreground mt-1.5">{f.desc}</p>
-              </Card>
+              <Link to={f.to} className="block h-full">
+                <Card className="p-6 h-full glass hover:shadow-glow transition-all hover:-translate-y-1 cursor-pointer">
+                  <div className="h-11 w-11 rounded-xl gradient-primary-bg grid place-items-center text-white mb-4">
+                    <f.icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="font-semibold text-lg">{f.title}</h3>
+                  <p className="text-sm text-muted-foreground mt-1.5">{f.desc}</p>
+                </Card>
+              </Link>
             </motion.div>
           ))}
         </div>
