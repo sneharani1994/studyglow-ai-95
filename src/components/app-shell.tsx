@@ -1,15 +1,20 @@
-import { Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, FileText, MessageSquare, Mic, FileSearch, BrainCircuit,
   Layers, CalendarRange, Sparkles, Target, GraduationCap, Network,
   UserCheck, RotateCcw, ScanLine, Languages, SmilePlus, BarChart3,
-  Settings, Bell, Search, Menu, GraduationCap as Logo,
+  Settings, Bell, Search, Menu, GraduationCap as Logo, LogOut,
 } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { clearUser, initials, useUser } from "@/lib/auth";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
 const nav = [
@@ -37,6 +42,15 @@ const nav = [
 export function AppShell({ children }: { children?: ReactNode }) {
   const [open, setOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const user = useUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !user) {
+      // not logged in — redirect to login
+      navigate({ to: "/login" });
+    }
+  }, [user, navigate]);
 
   return (
     <div className="min-h-screen flex bg-background">
@@ -97,9 +111,27 @@ export function AppShell({ children }: { children?: ReactNode }) {
               <Bell className="h-4 w-4" />
               <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-destructive" />
             </Button>
-            <Avatar className="h-8 w-8 ml-2">
-              <AvatarFallback className="gradient-primary-bg text-white text-xs">AK</AvatarFallback>
-            </Avatar>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="ml-2 outline-none">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="gradient-primary-bg text-white text-xs">
+                      {initials(user?.name ?? "U")}
+                    </AvatarFallback>
+                  </Avatar>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>
+                  <div className="font-medium truncate">{user?.name ?? "Guest"}</div>
+                  <div className="text-xs text-muted-foreground truncate font-normal">{user?.email ?? ""}</div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => { clearUser(); navigate({ to: "/login" }); }}>
+                  <LogOut className="h-4 w-4 mr-2" /> Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </header>
         <main className="flex-1 p-4 lg:p-8">{children ?? <Outlet />}</main>
