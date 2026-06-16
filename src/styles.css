@@ -160,5 +160,55 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
+
+@utility glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid var(--glass-border);
+}
+
+@utility gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility gradient-hero-bg {
+  background: var(--gradient-hero);
+}
+
+@utility gradient-primary-bg {
+  background: var(--gradient-primary);
+}
+
+@utility gradient-soft-bg {
+  background: var(--gradient-soft);
+}
+
+@utility shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+
+@utility shadow-card {
+  box-shadow: var(--shadow-card);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 oklch(0.58 0.24 295 / 0.5); }
+  50% { box-shadow: 0 0 0 20px oklch(0.58 0.24 295 / 0); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@utility animate-float { animation: float 4s ease-in-out infinite; }
+@utility animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
