@@ -130,7 +130,7 @@ function Hero() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button size="lg" asChild className="gradient-primary-bg text-white border-0 hover:opacity-90 shadow-glow">
-              <Link to="/signup">Get Started Free <ArrowRight className="h-4 w-4 ml-1" /></Link>
+              <Link to="/signup">Get Started <ArrowRight className="h-4 w-4 ml-1" /></Link>
             </Button>
             <Button size="lg" variant="outline">Watch Demo</Button>
           </div>
