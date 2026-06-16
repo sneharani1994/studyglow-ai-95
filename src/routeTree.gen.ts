@@ -15,7 +15,13 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppWeakTopicsRouteImport } from './routes/app.weak-topics'
 import { Route as AppVoiceRouteImport } from './routes/app.voice'
+import { Route as AppSummariesRouteImport } from './routes/app.summaries'
+import { Route as AppQuizzesRouteImport } from './routes/app.quizzes'
+import { Route as AppPredictorRouteImport } from './routes/app.predictor'
+import { Route as AppPlannerRouteImport } from './routes/app.planner'
+import { Route as AppFlashcardsRouteImport } from './routes/app.flashcards'
 import { Route as AppDocumentsRouteImport } from './routes/app.documents'
 import { Route as AppChatRouteImport } from './routes/app.chat'
 
@@ -49,9 +55,39 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppWeakTopicsRoute = AppWeakTopicsRouteImport.update({
+  id: '/weak-topics',
+  path: '/weak-topics',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppVoiceRoute = AppVoiceRouteImport.update({
   id: '/voice',
   path: '/voice',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSummariesRoute = AppSummariesRouteImport.update({
+  id: '/summaries',
+  path: '/summaries',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppQuizzesRoute = AppQuizzesRouteImport.update({
+  id: '/quizzes',
+  path: '/quizzes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPredictorRoute = AppPredictorRouteImport.update({
+  id: '/predictor',
+  path: '/predictor',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlannerRoute = AppPlannerRouteImport.update({
+  id: '/planner',
+  path: '/planner',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFlashcardsRoute = AppFlashcardsRouteImport.update({
+  id: '/flashcards',
+  path: '/flashcards',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDocumentsRoute = AppDocumentsRouteImport.update({
@@ -73,7 +109,13 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/app/chat': typeof AppChatRoute
   '/app/documents': typeof AppDocumentsRoute
+  '/app/flashcards': typeof AppFlashcardsRoute
+  '/app/planner': typeof AppPlannerRoute
+  '/app/predictor': typeof AppPredictorRoute
+  '/app/quizzes': typeof AppQuizzesRoute
+  '/app/summaries': typeof AppSummariesRoute
   '/app/voice': typeof AppVoiceRoute
+  '/app/weak-topics': typeof AppWeakTopicsRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
@@ -83,7 +125,13 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/app/chat': typeof AppChatRoute
   '/app/documents': typeof AppDocumentsRoute
+  '/app/flashcards': typeof AppFlashcardsRoute
+  '/app/planner': typeof AppPlannerRoute
+  '/app/predictor': typeof AppPredictorRoute
+  '/app/quizzes': typeof AppQuizzesRoute
+  '/app/summaries': typeof AppSummariesRoute
   '/app/voice': typeof AppVoiceRoute
+  '/app/weak-topics': typeof AppWeakTopicsRoute
   '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
@@ -95,7 +143,13 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/app/chat': typeof AppChatRoute
   '/app/documents': typeof AppDocumentsRoute
+  '/app/flashcards': typeof AppFlashcardsRoute
+  '/app/planner': typeof AppPlannerRoute
+  '/app/predictor': typeof AppPredictorRoute
+  '/app/quizzes': typeof AppQuizzesRoute
+  '/app/summaries': typeof AppSummariesRoute
   '/app/voice': typeof AppVoiceRoute
+  '/app/weak-topics': typeof AppWeakTopicsRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
@@ -108,7 +162,13 @@ export interface FileRouteTypes {
     | '/signup'
     | '/app/chat'
     | '/app/documents'
+    | '/app/flashcards'
+    | '/app/planner'
+    | '/app/predictor'
+    | '/app/quizzes'
+    | '/app/summaries'
     | '/app/voice'
+    | '/app/weak-topics'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -118,7 +178,13 @@ export interface FileRouteTypes {
     | '/signup'
     | '/app/chat'
     | '/app/documents'
+    | '/app/flashcards'
+    | '/app/planner'
+    | '/app/predictor'
+    | '/app/quizzes'
+    | '/app/summaries'
     | '/app/voice'
+    | '/app/weak-topics'
     | '/app'
   id:
     | '__root__'
@@ -129,7 +195,13 @@ export interface FileRouteTypes {
     | '/signup'
     | '/app/chat'
     | '/app/documents'
+    | '/app/flashcards'
+    | '/app/planner'
+    | '/app/predictor'
+    | '/app/quizzes'
+    | '/app/summaries'
     | '/app/voice'
+    | '/app/weak-topics'
     | '/app/'
   fileRoutesById: FileRoutesById
 }
@@ -185,11 +257,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/weak-topics': {
+      id: '/app/weak-topics'
+      path: '/weak-topics'
+      fullPath: '/app/weak-topics'
+      preLoaderRoute: typeof AppWeakTopicsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/voice': {
       id: '/app/voice'
       path: '/voice'
       fullPath: '/app/voice'
       preLoaderRoute: typeof AppVoiceRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/summaries': {
+      id: '/app/summaries'
+      path: '/summaries'
+      fullPath: '/app/summaries'
+      preLoaderRoute: typeof AppSummariesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/quizzes': {
+      id: '/app/quizzes'
+      path: '/quizzes'
+      fullPath: '/app/quizzes'
+      preLoaderRoute: typeof AppQuizzesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/predictor': {
+      id: '/app/predictor'
+      path: '/predictor'
+      fullPath: '/app/predictor'
+      preLoaderRoute: typeof AppPredictorRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/planner': {
+      id: '/app/planner'
+      path: '/planner'
+      fullPath: '/app/planner'
+      preLoaderRoute: typeof AppPlannerRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/flashcards': {
+      id: '/app/flashcards'
+      path: '/flashcards'
+      fullPath: '/app/flashcards'
+      preLoaderRoute: typeof AppFlashcardsRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/documents': {
@@ -212,14 +326,26 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppChatRoute: typeof AppChatRoute
   AppDocumentsRoute: typeof AppDocumentsRoute
+  AppFlashcardsRoute: typeof AppFlashcardsRoute
+  AppPlannerRoute: typeof AppPlannerRoute
+  AppPredictorRoute: typeof AppPredictorRoute
+  AppQuizzesRoute: typeof AppQuizzesRoute
+  AppSummariesRoute: typeof AppSummariesRoute
   AppVoiceRoute: typeof AppVoiceRoute
+  AppWeakTopicsRoute: typeof AppWeakTopicsRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppChatRoute: AppChatRoute,
   AppDocumentsRoute: AppDocumentsRoute,
+  AppFlashcardsRoute: AppFlashcardsRoute,
+  AppPlannerRoute: AppPlannerRoute,
+  AppPredictorRoute: AppPredictorRoute,
+  AppQuizzesRoute: AppQuizzesRoute,
+  AppSummariesRoute: AppSummariesRoute,
   AppVoiceRoute: AppVoiceRoute,
+  AppWeakTopicsRoute: AppWeakTopicsRoute,
   AppIndexRoute: AppIndexRoute,
 }
 
