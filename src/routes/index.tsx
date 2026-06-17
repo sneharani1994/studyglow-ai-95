@@ -57,8 +57,6 @@ function Index() {
       <Hero />
       <Features />
       <HowItWorks />
-      <Testimonials />
-      <Pricing />
       <FAQ />
       <Footer />
     </div>
@@ -70,8 +68,7 @@ function Nav() {
   const links = [
     { label: "Features", href: "#features" },
     { label: "AI Tools", href: "#tools" },
-    { label: "About", href: "#about" },
-    { label: "Pricing", href: "#pricing" },
+    { label: "How it Works", href: "#how-it-works" },
     { label: "Contact", href: "#contact" },
   ];
   return (
@@ -370,7 +367,7 @@ function Pricing() {
 
 function FAQ() {
   return (
-    <section className="py-24 border-t">
+    <section id="faq" className="py-24 border-t">
       <div className="max-w-3xl mx-auto px-4 lg:px-8">
         <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-center mb-10">
           Questions, answered
@@ -406,13 +403,17 @@ function Footer() {
         <div>
           <div className="font-semibold text-sm mb-3">Product</div>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>Features</li><li>Pricing</li><li>Changelog</li><li>Roadmap</li>
+            <li><a href="#features" className="hover:text-foreground transition-colors">Features</a></li>
+            <li><a href="#how-it-works" className="hover:text-foreground transition-colors">How it Works</a></li>
+            <li><a href="#faq" className="hover:text-foreground transition-colors">FAQ</a></li>
           </ul>
         </div>
         <div>
           <div className="font-semibold text-sm mb-3">Company</div>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>About</li><li>Blog</li><li>Careers</li><li>Contact</li>
+            <li><a href="#contact" className="hover:text-foreground transition-colors">Contact</a></li>
+            <li><span className="opacity-50">Blog</span></li>
+            <li><span className="opacity-50">Careers</span></li>
           </ul>
         </div>
       </div>
