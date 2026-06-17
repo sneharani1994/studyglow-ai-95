@@ -65,10 +65,12 @@ function Index() {
 }
 
 function Nav() {
+  const [mobileOpen, setMobileOpen] = React.useState(false);
   const links = [
     { label: "Features", href: "#features" },
     { label: "AI Tools", href: "#tools" },
     { label: "About", href: "#about" },
+    { label: "Pricing", href: "#pricing" },
     { label: "Contact", href: "#contact" },
   ];
   return (
@@ -95,11 +97,33 @@ function Nav() {
           <Button asChild className="gradient-primary-bg text-white border-0 hover:opacity-90">
             <Link to="/signup">Get Started</Link>
           </Button>
-          <Button variant="ghost" size="icon" className="md:hidden">
-            <Menu className="h-5 w-5" />
+          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileOpen((o) => !o)}>
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
       </div>
+      {mobileOpen && (
+        <div className="md:hidden border-t bg-background/95 backdrop-blur px-4 py-3 space-y-2">
+          {links.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              onClick={() => setMobileOpen(false)}
+              className="block text-sm text-muted-foreground hover:text-foreground transition-colors py-1"
+            >
+              {l.label}
+            </a>
+          ))}
+          <div className="pt-2 flex gap-2">
+            <Button variant="ghost" size="sm" asChild className="flex-1">
+              <Link to="/login">Login</Link>
+            </Button>
+            <Button size="sm" asChild className="flex-1 gradient-primary-bg text-white border-0 hover:opacity-90">
+              <Link to="/signup">Get Started</Link>
+            </Button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
