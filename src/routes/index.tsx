@@ -56,6 +56,8 @@ function Index() {
       <Hero />
       <Features />
       <HowItWorks />
+      <Testimonials />
+      <Pricing />
       <FAQ />
       <Footer />
     </div>
