@@ -68,8 +68,7 @@ function Nav() {
   const links = [
     { label: "Features", href: "#features" },
     { label: "AI Tools", href: "#tools" },
-    { label: "About", href: "#about" },
-    { label: "Pricing", href: "#pricing" },
+    { label: "How it Works", href: "#how-it-works" },
     { label: "Contact", href: "#contact" },
   ];
   return (
