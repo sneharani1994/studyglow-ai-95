@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Sparkles, MessageSquare, Mic, FileSearch, BrainCircuit, Layers,
   Target, CalendarRange, GraduationCap, Network, Languages, Activity,
-  Upload, Brain, MessagesSquare, Rocket, Check, Star, ArrowRight, Menu,
+  Upload, Brain, MessagesSquare, Rocket, Check, Star, ArrowRight, Menu, X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -56,6 +57,8 @@ function Index() {
       <Hero />
       <Features />
       <HowItWorks />
+      <Testimonials />
+      <Pricing />
       <FAQ />
       <Footer />
     </div>
@@ -63,10 +66,12 @@ function Index() {
 }
 
 function Nav() {
+  const [mobileOpen, setMobileOpen] = useState(false);
   const links = [
     { label: "Features", href: "#features" },
     { label: "AI Tools", href: "#tools" },
     { label: "About", href: "#about" },
+    { label: "Pricing", href: "#pricing" },
     { label: "Contact", href: "#contact" },
   ];
   return (
@@ -93,11 +98,33 @@ function Nav() {
           <Button asChild className="gradient-primary-bg text-white border-0 hover:opacity-90">
             <Link to="/signup">Get Started</Link>
           </Button>
-          <Button variant="ghost" size="icon" className="md:hidden">
-            <Menu className="h-5 w-5" />
+          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileOpen((o) => !o)}>
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
       </div>
+      {mobileOpen && (
+        <div className="md:hidden border-t bg-background/95 backdrop-blur px-4 py-3 space-y-2">
+          {links.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              onClick={() => setMobileOpen(false)}
+              className="block text-sm text-muted-foreground hover:text-foreground transition-colors py-1"
+            >
+              {l.label}
+            </a>
+          ))}
+          <div className="pt-2 flex gap-2">
+            <Button variant="ghost" size="sm" asChild className="flex-1">
+              <Link to="/login">Login</Link>
+            </Button>
+            <Button size="sm" asChild className="flex-1 gradient-primary-bg text-white border-0 hover:opacity-90">
+              <Link to="/signup">Get Started</Link>
+            </Button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
@@ -132,7 +159,9 @@ function Hero() {
             <Button size="lg" asChild className="gradient-primary-bg text-white border-0 hover:opacity-90 shadow-glow">
               <Link to="/signup">Get Started <ArrowRight className="h-4 w-4 ml-1" /></Link>
             </Button>
-            <Button size="lg" variant="outline">Watch Demo</Button>
+            <Button size="lg" variant="outline" asChild>
+              <a href="#how-it-works">Watch Demo</a>
+            </Button>
           </div>
         </motion.div>
 
@@ -230,7 +259,7 @@ function Features() {
 
 function HowItWorks() {
   return (
-    <section className="py-24 border-t gradient-soft-bg">
+    <section id="how-it-works" className="py-24 border-t gradient-soft-bg">
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
         <div className="text-center mb-14">
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight">How it works</h2>
@@ -327,8 +356,9 @@ function Pricing() {
                   p.featured ? "gradient-primary-bg text-white border-0 hover:opacity-90" : "",
                 )}
                 variant={p.featured ? "default" : "outline"}
+                asChild
               >
-                {p.cta}
+                <Link to="/signup">{p.cta}</Link>
               </Button>
             </Card>
           ))}
