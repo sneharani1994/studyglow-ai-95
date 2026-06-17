@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
+import React from "react";
 import { motion } from "framer-motion";
 import {
   Sparkles, MessageSquare, Mic, FileSearch, BrainCircuit, Layers,
   Target, CalendarRange, GraduationCap, Network, Languages, Activity,
-  Upload, Brain, MessagesSquare, Rocket, Check, Star, ArrowRight, Menu,
+  Upload, Brain, MessagesSquare, Rocket, Check, Star, ArrowRight, Menu, X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
