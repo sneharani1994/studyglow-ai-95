@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import React from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Sparkles, MessageSquare, Mic, FileSearch, BrainCircuit, Layers,
