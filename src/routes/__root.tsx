@@ -79,14 +79,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "StudySMart" },
+      { name: "description", content: "StudySmart AI is a frontend educational platform offering AI-powered learning tools." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "StudySMart" },
+      { property: "og:description", content: "StudySmart AI is a frontend educational platform offering AI-powered learning tools." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "StudySMart" },
+      { name: "twitter:description", content: "StudySmart AI is a frontend educational platform offering AI-powered learning tools." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/12933a96-76de-4216-9aa8-612515d020f7/id-preview-1c39e084--c82005e7-30f9-43ad-9a79-c9fe7f06ebf6.lovable.app-1782110910544.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/12933a96-76de-4216-9aa8-612515d020f7/id-preview-1c39e084--c82005e7-30f9-43ad-9a79-c9fe7f06ebf6.lovable.app-1782110910544.png" },
     ],
     links: [
       {
