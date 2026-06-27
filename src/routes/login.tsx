@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { setUser } from "@/lib/auth";
+import { loginWithCredentials } from "@/lib/auth";
+import { authService } from "@/lib/api";
 import { AuthLayout } from "@/components/auth-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,21 +18,26 @@ function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
-    const name = email.split("@")[0].replace(/[._-]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-    setUser({ name, email });
-    navigate({ to: "/app" });
+    setLoading(true);
+    setError(null);
+    try {
+      await loginWithCredentials(email, password);
+      navigate({ to: "/app" });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Login failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleOAuth = (provider: "Google" | "GitHub") => {
-    const email = window.prompt(`Sign in with ${provider}\n\nEnter your ${provider} email:`);
-    if (!email) return;
-    const name = window.prompt("Your name:", email.split("@")[0].replace(/[._-]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())) || email;
-    setUser({ name, email });
-    navigate({ to: "/app" });
+  const handleOAuth = (provider: "google" | "github") => {
+    window.location.href = authService.oauthUrl(provider);
   };
 
   return (
@@ -41,6 +47,7 @@ function LoginPage() {
       footer={<>Don't have an account? <Link to="/signup" className="text-primary font-medium hover:underline">Sign up</Link></>}
     >
       <form className="space-y-4" onSubmit={handleSubmit}>
+        {error && <p className="text-sm text-destructive">{error}</p>}
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input id="email" type="email" placeholder="you@university.edu" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -55,15 +62,15 @@ function LoginPage() {
         <div className="flex items-center gap-2">
           <Checkbox id="remember" /> <Label htmlFor="remember" className="text-sm font-normal">Remember me for 30 days</Label>
         </div>
-        <Button type="submit" className="w-full gradient-primary-bg text-white border-0 hover:opacity-90">
-          Sign in
+        <Button type="submit" disabled={loading} className="w-full gradient-primary-bg text-white border-0 hover:opacity-90">
+          {loading ? "Signing in…" : "Sign in"}
         </Button>
         <div className="flex items-center gap-3 my-2">
           <Separator className="flex-1" /><span className="text-xs text-muted-foreground">OR</span><Separator className="flex-1" />
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <Button variant="outline" type="button" onClick={() => handleOAuth("Google")}>Google</Button>
-          <Button variant="outline" type="button" onClick={() => handleOAuth("GitHub")}>GitHub</Button>
+          <Button variant="outline" type="button" onClick={() => handleOAuth("google")}>Google</Button>
+          <Button variant="outline" type="button" onClick={() => handleOAuth("github")}>GitHub</Button>
         </div>
       </form>
     </AuthLayout>
