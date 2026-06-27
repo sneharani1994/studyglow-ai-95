@@ -3,9 +3,8 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Send, Paperclip, Mic, Plus, Sparkles, FileText } from "lucide-react";
+import { Send, Paperclip, Mic, Plus, Sparkles } from "lucide-react";
 import { chatService, type ChatSession, type ChatMessage } from "@/lib/api";
 import { useUser } from "@/lib/auth";
 
