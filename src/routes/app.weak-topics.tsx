@@ -1,19 +1,55 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
 import { BookOpen, BrainCircuit, Layers } from "lucide-react";
-import { weakTopics } from "@/lib/mock-data";
+import { quizzesService, type QuizAttempt } from "@/lib/api";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Cell } from "recharts";
 
 export const Route = createFileRoute("/app/weak-topics")({
   component: WeakPage,
 });
 
+interface WeakTopic { topic: string; subject: string; strength: number; }
+
 function WeakPage() {
+  const [loading, setLoading] = useState(true);
+  const [weakTopics, setWeakTopics] = useState<WeakTopic[]>([]);
+
+  useEffect(() => {
+    quizzesService.attempts().then((atts: QuizAttempt[]) => {
+      const map = new Map<string, { subject: string; total: number; scored: number }>();
+      for (const a of atts) {
+        const title = a.quizzes?.title ?? "Quiz";
+        const subject = a.quizzes?.subjects?.name ?? "General";
+        const prev = map.get(title) ?? { subject, total: 0, scored: 0 };
+        prev.total += a.total_questions || 0;
+        prev.scored += a.score || 0;
+        map.set(title, prev);
+      }
+      const list = Array.from(map.entries()).map(([topic, v]) => ({
+        topic, subject: v.subject,
+        strength: v.total ? Math.round((v.scored / v.total) * 100) : 0,
+      })).sort((a, b) => a.strength - b.strength);
+      setWeakTopics(list);
+    }).catch(() => setWeakTopics([])).finally(() => setLoading(false));
+  }, []);
+
   return (
     <div>
       <PageHeader title="Weak Topic Detector" description="The gaps AI found in your understanding." />
+      {loading ? (
+        <Card className="p-6 mb-6"><Skeleton className="h-64 w-full" /></Card>
+      ) : weakTopics.length === 0 ? (
+        <Card className="p-10 text-center">
+          <div className="text-lg font-semibold mb-2">No quiz history yet</div>
+          <div className="text-sm text-muted-foreground mb-4">Take a quiz so we can spot your weak topics.</div>
+          <Link to="/app/quizzes"><Button>Go to Quizzes</Button></Link>
+        </Card>
+      ) : (
+      <>
       <Card className="p-6 mb-6">
         <h3 className="font-semibold mb-4">Topic strength</h3>
         <ResponsiveContainer width="100%" height={260}>
@@ -46,6 +82,8 @@ function WeakPage() {
           </Card>
         ))}
       </div>
+      </>
+      )}
     </div>
   );
 }
