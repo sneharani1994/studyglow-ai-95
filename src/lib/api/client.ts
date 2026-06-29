@@ -11,6 +11,15 @@ export const API_BASE_URL =
   "https://studyglow-backend-production.up.railway.app";
 
 const TOKEN_STORAGE_KEY = "studygpt.auth.token";
+const REFRESH_STORAGE_KEY = "studygpt.auth.refresh";
+const AUTH_EXPIRED_EVENT = "studygpt-auth-expired";
+
+/** Fired when the backend rejects the token and refresh fails. UI can listen to redirect to /login. */
+export function onAuthExpired(handler: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+  window.addEventListener(AUTH_EXPIRED_EVENT, handler);
+  return () => window.removeEventListener(AUTH_EXPIRED_EVENT, handler);
+}
 
 export function getAuthToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -29,6 +38,52 @@ export function setAuthToken(token: string | null): void {
   } catch {
     /* ignore */
   }
+}
+
+// ---------- 401 handling with single-flight refresh ----------
+let refreshInFlight: Promise<string | null> | null = null;
+
+async function tryRefreshToken(): Promise<string | null> {
+  if (typeof window === "undefined") return null;
+  if (refreshInFlight) return refreshInFlight;
+  const refreshToken = (() => {
+    try { return window.localStorage.getItem(REFRESH_STORAGE_KEY); } catch { return null; }
+  })();
+  if (!refreshToken) return null;
+  refreshInFlight = (async () => {
+    try {
+      const res = await fetch(buildUrl("/api/auth/refresh-token"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken }),
+      });
+      if (!res.ok) return null;
+      const data: any = await res.json().catch(() => null);
+      const newAccess = data?.session?.access_token ?? null;
+      const newRefresh = data?.session?.refresh_token ?? null;
+      if (newAccess) setAuthToken(newAccess);
+      if (newRefresh) {
+        try { window.localStorage.setItem(REFRESH_STORAGE_KEY, newRefresh); } catch { /* ignore */ }
+      }
+      return newAccess;
+    } catch {
+      return null;
+    } finally {
+      refreshInFlight = null;
+    }
+  })();
+  return refreshInFlight;
+}
+
+function handleAuthExpired() {
+  setAuthToken(null);
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(REFRESH_STORAGE_KEY);
+    window.localStorage.removeItem("studygpt_user");
+  } catch { /* ignore */ }
+  window.dispatchEvent(new Event(AUTH_EXPIRED_EVENT));
+  window.dispatchEvent(new Event("studygpt-auth"));
 }
 
 export interface ApiFetchOptions extends Omit<RequestInit, "body"> {
@@ -77,6 +132,7 @@ function buildUrl(
 export async function apiFetch<T = unknown>(
   path: string,
   options: ApiFetchOptions = {},
+  _retry = false,
 ): Promise<T> {
   const {
     body,
@@ -122,6 +178,12 @@ export async function apiFetch<T = unknown>(
   }
 
   if (!res.ok) {
+    // Auto-refresh on 401, then retry once. If refresh fails, signal expiry.
+    if (res.status === 401 && !skipAuth && !_retry) {
+      const newToken = await tryRefreshToken();
+      if (newToken) return apiFetch<T>(path, options, true);
+      handleAuthExpired();
+    }
     let errData: unknown = null;
     try {
       errData = await res.json();

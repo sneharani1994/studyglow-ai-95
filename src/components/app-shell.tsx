@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { initials, logout as logoutUser, useUser } from "@/lib/auth";
+import { onAuthExpired } from "@/lib/api/client";
+import { toast } from "sonner";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
@@ -50,6 +52,14 @@ export function AppShell({ children }: { children?: ReactNode }) {
   useEffect(() => {
     if (hydrated && !user) navigate({ to: "/login" });
   }, [hydrated, user, navigate]);
+
+  // Global: if the backend signals an expired session, redirect to /login.
+  useEffect(() => {
+    return onAuthExpired(() => {
+      toast.error("Your session expired. Please sign in again.");
+      navigate({ to: "/login" });
+    });
+  }, [navigate]);
 
   return (
     <div className="min-h-screen flex bg-background">
