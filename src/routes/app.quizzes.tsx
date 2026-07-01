@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/page-header";
 import { Clock, Sparkles, RotateCcw } from "lucide-react";
-import { quizzesService, type Quiz, type QuizQuestion, type QuizAttemptResult } from "@/lib/api";
+import { quizzesService, aiService, type Quiz, type QuizQuestion, type QuizAttemptResult } from "@/lib/api";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/quizzes")({
   component: QuizzesPage,
@@ -50,6 +51,33 @@ function QuizzesPage() {
 
   const reset = () => { setAnswers({}); setResult(null); };
 
+  const generate = async () => {
+    const topic = window.prompt("Quiz topic? (e.g. Database Normalization)");
+    if (!topic) return;
+    setBusy(true);
+    try {
+      const ai = await aiService.generateQuiz(topic, 5, difficulty);
+      const created = await quizzesService.create({
+        title: topic,
+        description: `AI-generated ${difficulty} quiz on ${topic}`,
+        difficulty,
+        questions: ai.questions.map((q) => ({
+          questionText: q.question_text,
+          options: q.options,
+          correctOptionIndex: q.correct_option_index,
+          explanation: q.explanation,
+        })),
+      });
+      await loadList(difficulty);
+      setActive(created);
+      setAnswers({});
+      setResult(null);
+      toast.success("Quiz generated");
+    } catch (e: any) {
+      toast.error(e?.message || "Could not generate quiz");
+    } finally { setBusy(false); }
+  };
+
   return (
     <div>
       <PageHeader title="Quiz Generator" description="AI-generated MCQs from your own notes." />
@@ -63,8 +91,9 @@ function QuizzesPage() {
             </Button>
           ))}
         </div>
-        <Button className="ml-auto gradient-primary-bg text-white border-0 hover:opacity-90">
-          <Sparkles className="h-4 w-4 mr-2" /> Generate new quiz
+        <Button onClick={generate} disabled={busy}
+          className="ml-auto gradient-primary-bg text-white border-0 hover:opacity-90">
+          <Sparkles className="h-4 w-4 mr-2" /> {busy ? "Working…" : "Generate new quiz"}
         </Button>
       </Card>
 

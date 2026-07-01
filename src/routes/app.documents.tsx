@@ -102,7 +102,9 @@ function DocumentsPage() {
                 <a className="flex-1" href={d.file_url} target="_blank" rel="noreferrer">
                   <Button size="sm" variant="outline" className="w-full"><Eye className="h-3.5 w-3.5 mr-1" />View</Button>
                 </a>
-                <Button size="sm" variant="ghost" className="text-destructive"><Trash2 className="h-3.5 w-3.5" /></Button>
+                <Button size="sm" variant="ghost" className="text-destructive" disabled title="Delete endpoint coming soon">
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
               </div>
             </Card>
           );

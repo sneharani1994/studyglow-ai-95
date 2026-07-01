@@ -129,7 +129,7 @@ function ChatPage() {
             ))}
           </div>
           <div className="flex gap-2 items-end glass rounded-2xl p-2">
-            <Button variant="ghost" size="icon"><Paperclip className="h-4 w-4" /></Button>
+            <Button variant="ghost" size="icon" disabled title="Attachments coming soon"><Paperclip className="h-4 w-4" /></Button>
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -137,7 +137,7 @@ function ChatPage() {
               placeholder="Ask anything about your notes…"
               className="border-0 bg-transparent focus-visible:ring-0"
             />
-            <Button variant="ghost" size="icon"><Mic className="h-4 w-4" /></Button>
+            <Button variant="ghost" size="icon" disabled title="Voice input coming soon"><Mic className="h-4 w-4" /></Button>
             <Button size="icon" onClick={send} disabled={sending || !input.trim()} className="gradient-primary-bg text-white border-0"><Send className="h-4 w-4" /></Button>
           </div>
         </div>
