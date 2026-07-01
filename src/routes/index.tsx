@@ -5,15 +5,11 @@ import { motion } from "framer-motion";
 import {
   Sparkles, MessageSquare, Mic, FileSearch, BrainCircuit, Layers,
   Target, CalendarRange, GraduationCap, Network, Languages, Activity,
-  Upload, Brain, MessagesSquare, Rocket, Check, Star, ArrowRight, Menu, X,
+  Upload, Brain, MessagesSquare, Rocket, ArrowRight, Menu, X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import {
-  Accordion, AccordionContent, AccordionItem, AccordionTrigger,
-} from "@/components/ui/accordion";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { testimonials, pricingPlans, faqs } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
