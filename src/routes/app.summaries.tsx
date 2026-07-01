@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Sparkles } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
-import { notesService, aiService, type Note } from "@/lib/api";
+import { uploadsService, aiService, type UploadedFile } from "@/lib/api";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/summaries")({
   component: SummariesPage,
@@ -18,33 +19,33 @@ function splitSummary(summary: string) {
 }
 
 function SummariesPage() {
-  const [notes, setNotes] = useState<Note[]>([]);
+  const [docs, setDocs] = useState<UploadedFile[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [summary, setSummary] = useState<string>("");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    notesService.list({ recent: true }).then((n) => {
-      setNotes(n);
-      if (n.length) setSelectedId(n[0].id);
-    }).catch(() => setNotes([]));
+    uploadsService.list().then((d) => {
+      setDocs(d);
+      if (d.length) setSelectedId(d[0].id);
+    }).catch(() => setDocs([]));
   }, []);
 
-  const selected = notes.find((n) => n.id === selectedId);
+  const selected = docs.find((d) => d.id === selectedId);
 
   const generate = async () => {
     if (!selected) return;
     setBusy(true);
     try {
-      const res = await aiService.summarize(selected.content || selected.title, "medium");
+      const res = await aiService.summarize(selected.filename, "medium");
       setSummary(res.summary);
+    } catch (e: any) {
+      toast.error(e?.message || "Could not generate summary");
     } finally { setBusy(false); }
   };
 
   const sections = summary
     ? splitSummary(summary)
-    : selected?.summary
-    ? splitSummary(selected.summary)
     : [{ title: "No summary yet", body: "Pick a document and click Generate summary." }];
 
   return (
@@ -54,11 +55,11 @@ function SummariesPage() {
         <div className="flex-1">
           <label className="text-sm font-medium mb-1.5 block">Select document</label>
           <Select value={selectedId ?? ""} onValueChange={(v) => { setSelectedId(v); setSummary(""); }}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder="Choose a document" /></SelectTrigger>
             <SelectContent>
-              {notes.length === 0
-                ? <SelectItem value="none" disabled>No notes yet</SelectItem>
-                : notes.map((d) => <SelectItem key={d.id} value={d.id}>{d.title}</SelectItem>)}
+              {docs.length === 0
+                ? <SelectItem value="none" disabled>No documents uploaded yet</SelectItem>
+                : docs.map((d) => <SelectItem key={d.id} value={d.id}>{d.filename}</SelectItem>)}
             </SelectContent>
           </Select>
         </div>
